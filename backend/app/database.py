@@ -1,0 +1,1 @@
+# Arquivo para gerenciar a conexão com o DB e implementar funções utilitárias para administrar essa integração

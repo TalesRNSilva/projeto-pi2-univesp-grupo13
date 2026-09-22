@@ -1,0 +1,38 @@
+/* Estilos compartilhados por todas as telas. */
+/* TODO: substituir/completar quando o Design System (seção 7 do Design Doc) existir. */
+
+body {
+  font-family: system-ui, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1rem 1.5rem;
+  background-color: #222;
+  color: white;
+}
+
+.navbar a {
+  color: white;
+  text-decoration: none;
+}
+
+.navbar a.ativo {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+main {
+  padding: 1.5rem;
+}
+
+footer {
+  padding: 1rem;
+  text-align: center;
+  font-size: 0.85rem;
+  color: #666;
+}
