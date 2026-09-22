@@ -1,4 +1,4 @@
-# Obral — Gestão pra toda obra
+# Obral - Gestão pra toda obra
 
 ## O que é
 
