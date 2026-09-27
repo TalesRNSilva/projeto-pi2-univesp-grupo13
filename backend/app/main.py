@@ -2,6 +2,8 @@
 from db.db_conn import *
 from fastapi import FastAPI
 
+## Para rodar: 'uvicorn main:app --reload' na pasta /app/
+
 app = FastAPI()
 
 @app.get("/")
@@ -40,3 +42,12 @@ async def teste_param(id: str, orcamento = 5000.00):
             'contratante': 'Prefeitura Municipal de Cidade XYZ',
             'telefone_contratante': '(11) 1234-5678',
             'email_contratante': 'contato@prefeitura-cidadexyz.com.br',}
+
+@app.get('/test-db')
+async def test_db():
+    try:
+        test_db_connection()
+        return {"message": "Conexão com o banco de dados bem-sucedida!"}
+    except Exception as e:
+        print(e)
+        return {"message": "Falha na conexão com o banco de dados."}
