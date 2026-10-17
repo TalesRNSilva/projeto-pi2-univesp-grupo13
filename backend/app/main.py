@@ -11,10 +11,12 @@ from utils import *
 
 app = FastAPI()
 
+################################################ Rotas da entidade Obras ################################################
 @app.get('/obras/')
 async def get_obras(p:int = 1, per_page:int = 10):
     return {1:1}
-    
+
+################################################ Rotas da entidade Responsavel ################################################
 @app.get('/responsaveis/', response_model = list[ResponsavelResponse])
 async def get_responsaveis(ativo = True):
     "Função que retorna todas as entidades do tipo Responsavel. Opcionalmente tem um query parameter para retornar só os ativos, True por padrão."
@@ -26,6 +28,7 @@ async def get_responsaveis(ativo = True):
         results = session.exec(statement).all()
     return results
 
+################################################ Rotas de teste ################################################
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
