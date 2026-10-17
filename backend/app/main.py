@@ -28,7 +28,7 @@ async def teste():
             }
 
 @app.get('/teste-param/{id}')
-async def teste_param(id: str, orcamento = 5000.00):
+async def teste_param(id: str, orcamento:float = 5000.00):
     "Função que verifica query e path parameters e retorna um dicionário com os dados do projeto."
     return {'id': id,
             'projeto': 'Reforma no banheiro do 1º andar',

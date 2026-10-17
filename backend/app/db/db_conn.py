@@ -56,6 +56,9 @@ def test_db_connection():
         with conn.cursor() as cursor:
             cursor.execute("SELECT 1 AS connected")
             print(cursor.fetchone())
+    except Exception as e:
+        print(f"Erro ao conectar ao banco de dados: {e}")
+        raise
     finally:
         if conn:
             conn.close()
