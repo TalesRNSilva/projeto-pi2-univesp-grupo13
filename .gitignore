@@ -180,5 +180,4 @@ cython_debug/
 .cursorignore
 .cursorindexingignore
 
-ca.pem
 teste.py

@@ -5,3 +5,4 @@ sqlalchemy
 pymysql
 python-dotenv
 pydantic
+tzdata

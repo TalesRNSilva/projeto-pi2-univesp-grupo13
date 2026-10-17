@@ -1,10 +1,30 @@
 ### Módulo que vai gerenciar as rotas e instanciar o APP
-from db.db_conn import *
-from fastapi import FastAPI
+from db import *
+from fastapi import FastAPI, Depends
+from sqlmodel import Session, select
+from modelos.responsavel import Responsavel
+from modelos.obra import Obra
+from schema.responsavel import *
+from utils import *
 
 ## Para rodar: 'uvicorn main:app --reload' na pasta /app/
 
 app = FastAPI()
+
+@app.get('/obras/')
+async def get_obras(p:int = 1, per_page:int = 10):
+    return {1:1}
+    
+@app.get('/responsaveis/', response_model = list[ResponsavelResponse])
+async def get_responsaveis(ativo = True):
+    "Função que retorna todas as entidades do tipo Responsavel. Opcionalmente tem um query parameter para retornar só os ativos, True por padrão."
+
+    with get_session() as session:
+        statement = select(Responsavel)
+        if ativo:
+            statement = statement.where(Responsavel.ativo == ativo)
+        results = session.exec(statement).all()
+    return results
 
 @app.get("/")
 async def root():

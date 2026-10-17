@@ -6,19 +6,24 @@ from pathlib import Path
 import pymysql
 import os
 from tempfile import TemporaryDirectory
+from sqlalchemy import URL, Engine
+from sqlmodel import create_engine, Session
 
 load_dotenv()
 
 DB_HOST = os.getenv("DATABASE_HOST")
+DB_PORT = os.getenv("DATABASE_PORT")
 DB_USER = os.getenv("DATABASE_USER")
 DB_PASSWORD = os.getenv("DATABASE_PASSWORD")
 DB_NAME = os.getenv("DATABASE_NAME")
 CA_CERTIFICATE = os.getenv("CA_CERTIFICATE")
+DB_SSL_CA = os.getenv("DATABASE_SSL_CA")
+ECHO = True
 
 def get_connection():
     "Função que tenta criar uma conexão com o banco de dados MySQL usando as variáveis de ambiente definidas no arquivo .env."
     try:
-        ca_file = build_ca_cert_file(CA_CERTIFICATE)
+        ca_file = get_ca_pem_path()
         conn = pymysql.connect(
             host = DB_HOST,
             database = DB_NAME,
@@ -62,3 +67,47 @@ def test_db_connection():
     finally:
         if conn:
             conn.close()
+
+def get_db_url():
+    "Função para facilitar criação de URI de conexão. Só deve ser usada internamente: nunca printar."
+    # uri = f'mysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
+    url = URL.create(
+        drivername = 'mysql+pymysql',
+        username = DB_USER,
+        password = DB_PASSWORD,
+        port = DB_PORT,
+        database = DB_NAME,
+        host = DB_HOST
+    )
+    return url
+
+def get_ca_pem_path():
+    "Função utilitária para puxar o path do ca.pem"
+    cwd = Path.cwd()
+    path_string = str(cwd)
+    current_directory = path_string.split('\\')[-1]
+    if current_directory == 'app':
+        ca_pem_path = cwd.parent / DB_SSL_CA
+    elif current_directory == 'backend':
+        ca_pem_path = cwd / DB_SSL_CA
+    elif current_directory == 'projeto-pi2-univesp-grupo13':
+        ca_pem_path = cwd / 'backend' / DB_SSL_CA
+    else:
+        raise ValueError('Unkown Directory')
+    return str(ca_pem_path)
+
+def get_sql_engine(echo = ECHO) -> Engine:
+    "Função para retornar uma engine de SQLAlchemy pronta pra rodar."
+    url = get_db_url()
+    connect_args = {
+        'ssl' : {
+                'ca' : get_ca_pem_path()
+            }
+        }
+    engine = create_engine(url = url, connect_args=connect_args, echo = echo)
+    return engine
+
+engine = get_sql_engine()
+
+def get_session(engine: Engine = engine) -> Session:
+    return Session(engine)
