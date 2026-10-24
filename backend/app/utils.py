@@ -10,7 +10,7 @@ def convert_numeric_to_display_id(id:int) -> str:
         raise ValueError("Erro ao converter ID: por favor, use um inteiro.")
     if id < 0:
         raise ValueError("Erro ao converter ID: Número negativo.")
-    padding_zeroes = max(4 - (id + 10)//10, 0)
+    padding_zeroes = max(4 - len(str(id)), 0)
     return 'O-' + padding_zeroes*'0' + str(id)
 
 def convert_display_to_numeric_id(display_id:str) -> int:
@@ -28,16 +28,16 @@ def test_util_functions():
 
     print('#'*50)
     print('Testando o conversor numérico > display')
-    id1, id2, id3, id4 = 0, 1, 2983, 928823
+    id1, id2, id3, id4 = 0, 20, 2983, 928823
     print(f'{convert_numeric_to_display_id(id1)} - esperado O-0000')
-    print(f'{convert_numeric_to_display_id(id2)} - esperado O-0001')
+    print(f'{convert_numeric_to_display_id(id2)} - esperado O-0020')
     print(f'{convert_numeric_to_display_id(id3)} - esperado O-2983')
     print(f'{convert_numeric_to_display_id(id4)} - esperado O-928823')
 
     print('#'*50)
     print('Testando o conversor display > numérico')
-    id1, id2, id3, id4 = 'O-0001', 'O-0101', 'O-0293', 'O-283732'
-    print(f'{convert_display_to_numeric_id(id1)} - esperado 1')
+    id1, id2, id3, id4 = 'O-0020', 'O-0101', 'O-0293', 'O-283732'
+    print(f'{convert_display_to_numeric_id(id1)} - esperado 20')
     print(f'{convert_display_to_numeric_id(id2)} - esperado 101')
     print(f'{convert_display_to_numeric_id(id3)} - esperado 293')
     print(f'{convert_display_to_numeric_id(id4)} - esperado 283732')

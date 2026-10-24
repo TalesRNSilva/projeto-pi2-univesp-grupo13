@@ -1,0 +1,13 @@
+$kind: http-request
+name: localhost:8000/responsavel/4/atualizar
+description: ""
+url: localhost:8000/responsavel/4
+method: PUT
+body:
+  type: json
+  content: "{\r
+
+    \    \"nome\" : \"Testo Testonildos\"\r
+
+    }"
+order: 3000

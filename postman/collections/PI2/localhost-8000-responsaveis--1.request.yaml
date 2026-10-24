@@ -1,0 +1,15 @@
+$kind: http-request
+name: localhost:8000/responsaveis/
+description: ""
+url: localhost:8000/responsaveis/
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \    \"nome\" : \"Teste Testonildo\",\r
+
+    \    \"email\" : \"testonildo@gmail.com\"\r
+
+    }"
+order: 2000

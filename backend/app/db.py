@@ -8,6 +8,7 @@ import os
 from tempfile import TemporaryDirectory
 from sqlalchemy import URL, Engine
 from sqlmodel import create_engine, Session
+from collections.abc import Generator
 
 load_dotenv()
 
@@ -109,5 +110,6 @@ def get_sql_engine(echo = ECHO) -> Engine:
 
 engine = get_sql_engine()
 
-def get_session(engine: Engine = engine) -> Session:
-    return Session(engine)
+def get_session() -> Generator[Session, None, None]:
+    with Session(engine) as session:
+        yield session

@@ -1,0 +1,6 @@
+$kind: http-request
+name: localhost:8000/responsaveis/
+description: ""
+url: localhost:8000/responsaveis/
+method: GET
+order: 1000

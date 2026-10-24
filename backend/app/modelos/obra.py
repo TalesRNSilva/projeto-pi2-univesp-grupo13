@@ -6,7 +6,7 @@ from config import LOCAL_TZ, StatusObra
 from modelos.responsavel import Responsavel
 
 class Obra(SQLModel, table = True):
-    id: int | None = Field(primary_key = True) # O Id tá como opcional porque ele vai ser gerado pelo database. Então ele pode ser nulo no modelo
+    id: int | None = Field(default = None, primary_key = True) # O Id tá como opcional porque ele vai ser gerado pelo database. Então ele pode ser nulo no modelo
     projeto: str 
     data_inicio: dt.date
     data_conclusao: dt.date
