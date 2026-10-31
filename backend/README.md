@@ -26,6 +26,24 @@ armazenados em MySQL (instância na nuvem — a string de conexão vem do `.env`
    http://localhost:8000/docs — dá pra testar cada endpoint por ali mesmo,
    sem precisar do front.
 
+## Deploy no Render
+
+O arquivo `render.yaml` na raiz do repositório já define um Web Service com
+`backend` como diretório raiz. Ao usar Blueprint, configure no Render as
+variáveis `DATABASE_HOST`, `DATABASE_PORT`, `DATABASE_USER`,
+`DATABASE_PASSWORD`, `DATABASE_NAME` e `DATABASE_SSL_CA`. Para o certificado
+que já está no repositório, use `ca.pem` como valor de `DATABASE_SSL_CA`.
+
+Se criar o serviço pelo Dashboard, use:
+
+- **Root Directory:** `backend`
+- **Build Command:** `pip install -r requirements.txt`
+- **Start Command:** `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+- **Health Check Path:** `/`
+
+Nunca coloque senha ou o conteúdo do certificado em um arquivo versionado.
+Depois do deploy, teste `/`, `/docs` e `/obras` usando a URL `onrender.com`.
+
 ## Estrutura
 
 ```
@@ -68,5 +86,5 @@ Em serviços como Render ou Railway, configure:
 - **Build command:** `pip install -r requirements.txt`
 - **Start command:** `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
 
-Configure a variável de ambiente `DATABASE_URL` no painel do serviço —
-nunca commitem o `.env` real (ele já está no `.gitignore`).
+Configure as variáveis de conexão descritas acima no painel do serviço —
+nunca commite o `.env` real (ele já está no `.gitignore`).
