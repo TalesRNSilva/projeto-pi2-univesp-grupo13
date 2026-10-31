@@ -50,6 +50,26 @@
           <a class="button button-primary" href="cadastro.html"><span aria-hidden="true">+</span> Nova Obra</a>
         </div>
       </div>
+      <section class="obra-filters" id="filtros-obras" aria-label="Filtros e ordenação">
+        <div class="filter-group">
+          <h2>Ordenar por</h2>
+          <div class="pill-list" role="group" aria-label="Campo de ordenação">
+            <button class="filter-pill" type="button" data-sort="id" aria-pressed="false">ID <span class="sort-arrow" aria-hidden="true"></span></button>
+            <button class="filter-pill" type="button" data-sort="data_conclusao" aria-pressed="false">Previsão <span class="sort-arrow" aria-hidden="true"></span></button>
+            <button class="filter-pill is-active" type="button" data-sort="ultima_atualizacao" aria-pressed="true">Última atualização <span class="sort-arrow" aria-hidden="true">↓</span></button>
+          </div>
+        </div>
+        <div class="filter-group">
+          <h2>Status</h2>
+          <div class="pill-list" role="group" aria-label="Filtro por status">
+            <button class="filter-pill" type="button" data-status="Não iniciado" aria-pressed="false">Não iniciado</button>
+            <button class="filter-pill" type="button" data-status="Em andamento" aria-pressed="false">Em andamento</button>
+            <button class="filter-pill" type="button" data-status="Concluído" aria-pressed="false">Concluído</button>
+            <button class="filter-pill" type="button" data-status="Encerrado" aria-pressed="false">Encerrado</button>
+          </div>
+        </div>
+        <button class="button button-secondary" type="button" id="limpar-filtros">Limpar filtros</button>
+      </section>
       <div id="lista-obras" class="project-list" aria-live="polite"></div>
       <p class="list-caption" id="list-caption"></p>
       <nav class="pagination" id="paginacao-obras" aria-label="Paginação das obras" hidden></nav>
@@ -58,6 +78,7 @@
 
   <footer>Trabalho acadêmico — Univesp</footer>
 
+  <script src="js/api.js"></script>
   <script src="js/home.js"></script>
 </body>
 </html>

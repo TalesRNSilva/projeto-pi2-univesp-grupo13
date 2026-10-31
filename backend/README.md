@@ -37,8 +37,14 @@ app/
 └── rotas/       # os endpoints em si, um arquivo por entidade
 ```
 
-Os endpoints hoje retornam dados de exemplo (stub) — procure por `# TODO`
-em `app/routers/` pra saber onde entra a lógica real de banco.
+`GET /obras` aceita `p`, `per_page`, `sort_by`, `sort_order` e `status`, e
+retorna `{ obras, current_page, total_pages, total_items }`. A ordenação
+padrão é por `ultima_atualizacao` descendente. Os valores aceitos em
+`sort_by` são `id`, `ultima_atualizacao` e `data_conclusao`; em `sort_order`,
+`asc` e `desc`. `status` pode ser repetido para combinar os quatro valores
+do enum de obras (por exemplo, `status=Concluído&status=Em%20andamento`).
+`GET /obras/download` retorna todas as obras como um arquivo CSV UTF-8. O
+download responde 404 quando não há obras.
 
 ## Adicionalmente
 

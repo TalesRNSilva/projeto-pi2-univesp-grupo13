@@ -1,4 +1,5 @@
 from pydantic import BaseModel, model_validator, ConfigDict, computed_field
+from typing import List
 from schema.base_schema import BaseSchema
 from schema.responsavel import ResponsavelResponseLean
 from decimal import Decimal
@@ -19,6 +20,7 @@ class ObraResponse(BaseSchema):
     contratante: str | None
     telefone: str | None 
     email_contratante: str | None
+    id_responsavel: int
 
     cadastro_timestamp: dt.datetime
     ultima_atualizacao: dt.datetime
@@ -29,6 +31,13 @@ class ObraResponse(BaseSchema):
     @property
     def display_id(self) -> str:
         return convert_numeric_to_display_id(self.id)
+
+
+class ObrasPaginatedResponse(BaseSchema):
+    obras: List[ObraResponse]
+    current_page: int
+    total_pages: int
+    total_items: int
 
 
 class ObraPost(BaseSchema):

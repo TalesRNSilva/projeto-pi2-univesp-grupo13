@@ -22,9 +22,9 @@
 
   <main>
     <h1>Responsáveis</h1>
-    <!-- TODO: formulário simples de cadastro (nome + email opcional) -->
-    <!-- TODO: lista paginada com botões de editar (popup) e remover (soft delete) -->
-    <div id="lista-responsaveis">Carregando...</div>
+    <form id="form-responsavel" class="inline-form"><label>Nome *<input name="nome" required minlength="3" maxlength="100"></label><label>E-mail<input name="email" type="email" maxlength="100"></label><button class="button button-primary" type="submit">Cadastrar</button></form>
+    <p id="mensagem-responsaveis" class="form-message" role="alert"></p><div id="lista-responsaveis" class="responsaveis-list">Carregando...</div>
+    <dialog id="modal-edicao"><form method="dialog" id="form-edicao"><h2>Editar responsável</h2><input type="hidden" name="id"><label>Nome *<input name="nome" required minlength="3" maxlength="100"></label><label>E-mail<input name="email" type="email" maxlength="100"></label><div class="form-actions"><button class="button button-secondary" value="cancel">Cancelar</button><button class="button button-primary" value="save">Salvar</button></div></form></dialog>
   </main>
 
   <footer>Trabalho acadêmico — Univesp</footer>

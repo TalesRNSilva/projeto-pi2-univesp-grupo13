@@ -1,8 +1,15 @@
 ### Módulo que vai gerenciar as rotas e instanciar o APP
 from db import *
 from fastapi import FastAPI, Depends, Query, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
 from sqlmodel import Session, select
 from sqlalchemy.orm import joinedload
+from sqlalchemy import func
+from io import StringIO
+import csv
+from typing import Literal
+from config import StatusObra
 from modelos.responsavel import Responsavel
 from modelos.obra import Obra
 from schema.responsavel import *
@@ -13,19 +20,105 @@ from utils import *
 ## Para rodar: 'uvicorn main:app --reload' na pasta /app/
 
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=False,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 # inserir_dados_teste()
 
 ################################################ Rotas da entidade Obras ################################################
-@app.get('/obras', response_model = list[ObraResponse])
+@app.get('/obras', response_model = ObrasPaginatedResponse)
 async def get_obras(p:int = Query(default = 1, ge = 1), 
                     per_page:int = Query(default = 12, ge = 1, le = 100), 
+                    sort_by:Literal["id", "ultima_atualizacao", "data_conclusao"] = Query(
+                        default="ultima_atualizacao",
+                        description="Campo usado para ordenar os resultados.",
+                    ),
+                    sort_order:Literal["asc", "desc"] = Query(
+                        default="desc",
+                        description="Direção da ordenação.",
+                    ),
+                    status:list[StatusObra] | None = Query(
+                        default=None,
+                        description="Filtra por um ou mais status da obra.",
+                    ),
                     session = Depends(get_session)):
-    "Função que retorna entidades do tipo Obra com paginação."
+    "Retorna obras paginadas, filtradas por status e ordenadas."
 
+    sort_columns = {
+        "id": Obra.id,
+        "ultima_atualizacao": Obra.ultima_atualizacao,
+        "data_conclusao": Obra.data_conclusao,
+    }
+    statement = select(Obra)
+    if status:
+        statement = statement.where(Obra.status.in_(status))
+
+    total_items = session.exec(
+        select(func.count()).select_from(statement.subquery())
+    ).one()
+    total_pages = max(1, (total_items + per_page - 1) // per_page)
     offset = (p-1)*per_page
-    statement = select(Obra).options(joinedload(Obra.responsavel)).offset(offset).limit(per_page)
+    sort_column = sort_columns[sort_by]
+    sort_expression = sort_column.asc() if sort_order == "asc" else sort_column.desc()
+    statement = (
+        statement
+        .options(joinedload(Obra.responsavel))
+        .order_by(sort_expression, Obra.id.desc())
+        .offset(offset)
+        .limit(per_page)
+    )
     results = session.exec(statement).all()
-    return results
+    return {
+        "obras": results,
+        "current_page": p,
+        "total_pages": total_pages,
+        "total_items": total_items,
+    }
+
+
+@app.get('/obras/download')
+async def download_obras(session = Depends(get_session)):
+    "Exporta todas as obras no mesmo formato de dados da consulta, sem paginação."
+
+    statement = select(Obra).options(joinedload(Obra.responsavel))
+    obras = session.exec(statement).all()
+    if not obras:
+        raise HTTPException(404, "Não há obras para exportar.")
+
+    output = StringIO()
+    writer = csv.writer(output, delimiter=";", lineterminator="\r\n")
+    writer.writerow([
+        "ID", "Projeto", "Responsável", "E-mail do responsável", "Data de início",
+        "Data de conclusão", "Status", "Orçamento", "Endereço", "Descrição",
+        "Contratante", "Telefone", "E-mail do contratante",
+    ])
+    for obra in obras:
+        writer.writerow([
+            convert_numeric_to_display_id(obra.id),
+            obra.projeto,
+            obra.responsavel.nome,
+            obra.responsavel.email or "",
+            obra.data_inicio.isoformat(),
+            obra.data_conclusao.isoformat(),
+            obra.status.value,
+            str(obra.orcamento) if obra.orcamento is not None else "",
+            obra.endereco or "",
+            obra.descricao or "",
+            obra.contratante or "",
+            obra.telefone or "",
+            obra.email_contratante or "",
+        ])
+
+    content = "\ufeff" + output.getvalue()
+    return StreamingResponse(
+        iter([content]),
+        media_type="text/csv; charset=utf-8",
+        headers={"Content-Disposition": "attachment; filename=obral-obras.csv"},
+    )
 
 @app.post('/obras', response_model = ObraResponse)
 async def post_obras(obra: ObraPost, session = Depends(get_session)):
@@ -46,6 +139,23 @@ async def post_obras(obra: ObraPost, session = Depends(get_session)):
     session.refresh(obra_db)
     session.refresh(obra_db.responsavel)
     return obra_db
+
+
+@app.get('/obra/{display_id}', response_model=ObraResponse)
+async def get_obra(display_id: str, session=Depends(get_session)):
+    "Retorna uma obra específica para o fluxo de edição."
+    try:
+        numeric_id = convert_display_to_numeric_id(display_id)
+    except ValueError as exc:
+        raise HTTPException(422, "ID de obra inválido.") from exc
+
+    obra = session.exec(
+        select(Obra).where(Obra.id == numeric_id).options(joinedload(Obra.responsavel))
+    ).first()
+    if not obra:
+        raise HTTPException(404, "Obra não encontrada.")
+    return obra
+
 
 @app.put('/obra/{display_id}', response_model = ObraResponse)
 async def atualizar_obra(display_id:str, obra_in: ObraPut, session = Depends(get_session)):

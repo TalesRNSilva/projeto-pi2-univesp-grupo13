@@ -16,9 +16,9 @@ cadastro.html         # Cadastro de Obras (/cadastro)
 responsaveis.html     # Cadastro de Responsáveis (/responsaveis)
 css/styles.css         # estilos compartilhados por todas as telas
 js/api.js              # configuração da URL do back-end + funções de requisição
-js/home.js             # lógica específica da tela de Visualização Geral
-js/cadastro.js         # lógica específica da tela de Cadastro
-js/responsaveis.js     # lógica específica da tela de Responsáveis
+js/home.js             # listagem paginada, edição, remoção e exportação
+js/cadastro.js         # criação/edição de obras e cadastro rápido de responsável
+js/responsaveis.js     # cadastro, edição e remoção (soft delete)
 assets/                # imagens, logotipo etc.
 ```
 

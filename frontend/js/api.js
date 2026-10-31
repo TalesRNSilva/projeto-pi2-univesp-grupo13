@@ -7,7 +7,7 @@ const BASE_URL = "http://localhost:8000"; // troque pela URL do back publicado
 
 async function apiGet(path) {
   const res = await fetch(`${BASE_URL}${path}`);
-  if (!res.ok) throw new Error(`Erro ao buscar ${path}: ${res.status}`);
+  if (!res.ok) throw new Error(await mensagemErro(res, `Erro ao buscar ${path}`));
   return res.json();
 }
 
@@ -17,7 +17,7 @@ async function apiPost(path, dados) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(dados),
   });
-  if (!res.ok) throw new Error(`Erro ao enviar para ${path}: ${res.status}`);
+  if (!res.ok) throw new Error(await mensagemErro(res, `Erro ao enviar para ${path}`));
   return res.json();
 }
 
@@ -27,12 +27,27 @@ async function apiPut(path, dados) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(dados),
   });
-  if (!res.ok) throw new Error(`Erro ao atualizar ${path}: ${res.status}`);
+  if (!res.ok) throw new Error(await mensagemErro(res, `Erro ao atualizar ${path}`));
   return res.json();
 }
 
 async function apiDelete(path) {
   const res = await fetch(`${BASE_URL}${path}`, { method: "DELETE" });
-  if (!res.ok) throw new Error(`Erro ao excluir ${path}: ${res.status}`);
+  if (!res.ok) throw new Error(await mensagemErro(res, `Erro ao excluir ${path}`));
   return res.json();
+}
+
+async function mensagemErro(res, prefixo) {
+  try {
+    const body = await res.json();
+    return `${prefixo}: ${body.detail || res.status}`;
+  } catch {
+    return `${prefixo}: ${res.status}`;
+  }
+}
+
+async function apiDownload(path) {
+  const res = await fetch(`${BASE_URL}${path}`);
+  if (!res.ok) throw new Error(await mensagemErro(res, `Erro ao exportar ${path}`));
+  return res.blob();
 }
