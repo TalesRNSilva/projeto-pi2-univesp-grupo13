@@ -3,7 +3,7 @@
  * Este é o ÚNICO lugar que precisa mudar quando o back-end for publicado
  * em um endereço diferente do localhost.
  */
-const BASE_URL = "http://localhost:8000"; // troque pela URL do back publicado
+const BASE_URL = "https://projeto-pi2-univesp-grupo13.onrender.com"; // troque pela URL do back publicado
 
 async function apiGet(path) {
   const res = await fetch(`${BASE_URL}${path}`);
