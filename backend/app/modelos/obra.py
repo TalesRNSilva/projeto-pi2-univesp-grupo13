@@ -2,8 +2,8 @@ from sqlmodel import Field, SQLModel, Relationship
 from decimal import Decimal
 from typing import Annotated
 import datetime as dt
-from config import LOCAL_TZ, StatusObra
-from modelos.responsavel import Responsavel
+from ..config import LOCAL_TZ, StatusObra
+from .responsavel import Responsavel
 
 class Obra(SQLModel, table = True):
     id: int | None = Field(default = None, primary_key = True) # O Id tá como opcional porque ele vai ser gerado pelo database. Então ele pode ser nulo no modelo

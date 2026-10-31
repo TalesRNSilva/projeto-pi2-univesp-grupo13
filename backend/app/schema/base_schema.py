@@ -1,5 +1,5 @@
 from datetime import datetime
-from config import LOCAL_TZ
+from ..config import LOCAL_TZ
 from pydantic import BaseModel, ConfigDict, model_validator
 
 class BaseSchema(BaseModel):

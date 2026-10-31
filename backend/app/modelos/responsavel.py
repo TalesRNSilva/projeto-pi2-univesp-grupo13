@@ -1,7 +1,7 @@
 from sqlmodel import Field, SQLModel
 from typing import Annotated
 import datetime as dt
-from config import LOCAL_TZ
+from ..config import LOCAL_TZ
 
 class Responsavel(SQLModel, table = True):
     id: int | None = Field(default = None, primary_key = True) # O Id tá como opcional porque ele vai ser gerado pelo database. Então ele pode ser nulo no modelo

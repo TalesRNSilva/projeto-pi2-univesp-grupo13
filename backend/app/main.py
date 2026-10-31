@@ -1,5 +1,5 @@
 ### Módulo que vai gerenciar as rotas e instanciar o APP
-from db import *
+from .db import *
 from fastapi import FastAPI, Depends, Query, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
@@ -9,15 +9,15 @@ from sqlalchemy import func
 from io import StringIO
 import csv
 from typing import Literal
-from config import StatusObra
-from modelos.responsavel import Responsavel
-from modelos.obra import Obra
-from schema.responsavel import *
-from schema.obra import *
-from mock_data_seed import inserir_dados_teste
-from utils import *
+from .config import StatusObra
+from .modelos.responsavel import Responsavel
+from .modelos.obra import Obra
+from .schema.responsavel import *
+from .schema.obra import *
+from .mock_data_seed import inserir_dados_teste
+from .utils import *
 
-## Para rodar: 'uvicorn main:app --reload' na pasta /app/
+## Para rodar a partir de backend: 'uvicorn app.main:app --reload'
 
 app = FastAPI()
 app.add_middleware(

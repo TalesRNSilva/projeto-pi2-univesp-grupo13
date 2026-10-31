@@ -1,7 +1,7 @@
 from pydantic import BaseModel, model_validator, ConfigDict, computed_field, Field
-from schema.base_schema import BaseSchema
+from .base_schema import BaseSchema
 import datetime as dt
-from utils import convert_numeric_to_display_id
+from ..utils import convert_numeric_to_display_id
 
 # Modelos de saída
 class ResponsavelResponse(BaseSchema):

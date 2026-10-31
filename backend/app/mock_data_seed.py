@@ -1,9 +1,9 @@
 from datetime import date
 from decimal import Decimal
 
-from db import get_session
-from modelos.obra import Obra
-from modelos.responsavel import Responsavel
+from .db import get_session
+from .modelos.obra import Obra
+from .modelos.responsavel import Responsavel
 from sqlmodel import select
 
 dados_responsaveis_teste = [
@@ -109,4 +109,3 @@ def remover_dados_teste():
         for responsavel in responsaveis_teste:
             session.delete(responsavel)
         session.commit()
-

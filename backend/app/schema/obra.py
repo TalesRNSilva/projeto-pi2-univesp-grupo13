@@ -1,12 +1,12 @@
 from pydantic import BaseModel, model_validator, ConfigDict, computed_field
 from typing import List
-from schema.base_schema import BaseSchema
-from schema.responsavel import ResponsavelResponseLean
+from .base_schema import BaseSchema
+from .responsavel import ResponsavelResponseLean
 from decimal import Decimal
 from sqlmodel import Field
 import datetime as dt
-from config import  StatusObra
-from utils import convert_numeric_to_display_id
+from ..config import StatusObra
+from ..utils import convert_numeric_to_display_id
 
 class ObraResponse(BaseSchema):
     id: int = Field(exclude = True)
